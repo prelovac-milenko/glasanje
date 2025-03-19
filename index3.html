@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Glasanje</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        const SERVER_URL = "http://192.168.0.21:8000"; // Zameni IP adresu
+
+        async function setQuestion() {
+            const question = document.getElementById("question-input").value;
+            await fetch(SERVER_URL + "/set_question/" + encodeURIComponent(question), { method: "POST" });
+        }
+
+        function updateResults(data) {
+            document.getElementById("current-question").innerText = data.question;
+            document.getElementById("yes-count").innerText = data.yes;
+            document.getElementById("no-count").innerText = data.no;
+        }
+
+        function setupWebSocket() {
+            const ws = new WebSocket(`ws://${SERVER_URL.replace("http://", "")}/ws`);
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                updateResults(data);
+            };
+        }
+
+        window.onload = setupWebSocket;
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Administratorski Panel</h1>
+        <input type="text" id="question-input" placeholder="Unesi pitanje">
+        <button onclick="setQuestion()">Postavi pitanje</button>
+        
+        <h3>Trenutno pitanje:</h3>
+        <p class="question-text" id="current-question">Čekam unos...</p>
+
+        <div class="results">
+            <p>DA: <span id="yes-count">0</span></p>
+            <p>NE: <span id="no-count">0</span></p>
+        </div>
+    </div>
+</body>
+</html>
