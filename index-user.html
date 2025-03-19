@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glasanje</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        const SERVER_URL = "http://192.168.0.21:8000";  // Zameni IP adresu
+
+        async function vote(option) {
+            const response = await fetch(SERVER_URL + "/vote/" + option, { method: "POST" });
+
+            if (response.ok) {
+        document.getElementById("vote-alert").innerText = "Glas uspješno zabilježen!";
+        document.getElementById("vote-alert").style.opacity = "1";
+        
+        // Ako želiš klasičan alert, umesto ovoga dodaj: alert("Glas uspješno zabilježen!");
+
+        setTimeout(() => {
+            document.getElementById("vote-alert").style.opacity = "0";
+        }, 3000);
+    }
+}
+
+
+        function updateUI(data) {
+            document.getElementById("question").innerText = data.question;
+            let buttonsDiv = document.getElementById("buttons");
+            buttonsDiv.innerHTML = "";
+
+            data.options.forEach(option => {
+                buttonsDiv.innerHTML += `<button onclick="vote('${option}')" class="vote-btn">${option}</button>`;
+            });
+        }
+
+        function setupWebSocket() {
+            const ws = new WebSocket(`ws://${SERVER_URL.replace("http://", "")}/ws`);
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                updateUI(data);
+            };
+        }
+
+        window.onload = setupWebSocket;
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1 id="question">Učitavanje pitanja...</h1>
+        <div id="buttons" class="button-group"></div>
+        <p id="vote-alert" class="vote-alert"></p>
+
+    </div>
+</body>
+</html>
