@@ -6,17 +6,26 @@
     <title>Admin - Glasanje</title>
     <link rel="stylesheet" href="style.css">
     <script>
-        const SERVER_URL = "http://192.168.0.21:8000"; // Zameni IP adresu
+        const SERVER_URL = "http://192.168.0.X:8000";  // Zameni IP adresu
 
         async function setQuestion() {
             const question = document.getElementById("question-input").value;
-            await fetch(SERVER_URL + "/set_question/" + encodeURIComponent(question), { method: "POST" });
+            const options = document.getElementById("options-input").value.split(",");
+            await fetch(SERVER_URL + "/set_question/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ question, options })
+            });
         }
 
         function updateResults(data) {
             document.getElementById("current-question").innerText = data.question;
-            document.getElementById("yes-count").innerText = data.yes;
-            document.getElementById("no-count").innerText = data.no;
+            let resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = "";
+
+            for (const [option, votes] of Object.entries(data.votes)) {
+                resultsDiv.innerHTML += `<p>${option}: ${votes} glasova</p>`;
+            }
         }
 
         function setupWebSocket() {
@@ -27,22 +36,27 @@
             };
         }
 
+        async function cancelQuestion() {
+            await fetch(SERVER_URL + "/cancel_question/", { method: "POST" });
+        }
+
+
         window.onload = setupWebSocket;
     </script>
 </head>
 <body>
     <div class="container">
-        <h1>Administratorski Panel</h1>
-        <input type="text" id="question-input" placeholder="Unesi pitanje">
+        <h1>Admin Panel</h1>
+        <input type="text" id="question-input" placeholder="Unesite pitanje">
+        <input type="text" id="options-input" placeholder="Opcije (odvojene zarezom)">
         <button onclick="setQuestion()">Postavi pitanje</button>
+        <button onclick="cancelQuestion()" class="cancel-btn">Izbrisi pitanje</button>
+
         
         <h3>Trenutno pitanje:</h3>
-        <p class="question-text" id="current-question">Čekam unos...</p>
+        <p class="question-text" id="current-question">Trenutno nema pitanja...</p>
 
-        <div class="results">
-            <p>DA: <span id="yes-count">0</span></p>
-            <p>NE: <span id="no-count">0</span></p>
-        </div>
+        <div id="results" class="rezultat"></div>
     </div>
 </body>
 </html>

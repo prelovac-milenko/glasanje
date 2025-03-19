@@ -1,4 +1,4 @@
-/* Generalno */
+
 * {
     margin: 0;
     padding: 0;
@@ -6,7 +6,6 @@
     font-family: 'Arial', sans-serif;
 }
 
-/* Tamna tema */
 body {
     background: #121212;
     color: white;
@@ -16,7 +15,6 @@ body {
     height: 100vh;
 }
 
-/* Kontejner */
 .container {
     background: #1e1e1e;
     padding: 20px;
@@ -27,13 +25,11 @@ body {
     max-width: 400px;
 }
 
-/* Naslov */
 h1 {
     font-size: 24px;
     margin-bottom: 20px;
 }
 
-/* Input */
 input {
     width: 100%;
     padding: 10px;
@@ -46,7 +42,6 @@ input {
     text-align: center;
 }
 
-/* Dugmad */
 button {
     width: 100%;
     padding: 10px;
@@ -56,35 +51,46 @@ button {
     cursor: pointer;
     transition: 0.2s;
     margin-top: 10px;
+    background-color: #52e94c;
 }
 
-button:hover {
+.vote-btn {
+    width: 100px;
+    padding: 10px;
+    margin: 5px;
+    background: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.vote-btn:hover {
     opacity: 0.8;
 }
 
-/* Specifične boje dugmadi */
-.yes {
-    background: #4CAF50;
-    color: white;
-}
-
-.no {
-    background: #E53935;
-    color: white;
-}
-
-/* Grupisanje dugmadi */
 .button-group {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
     justify-content: center;
 }
 
-/* Rezultati */
-.results {
-    margin-top: 20px;
-    font-size: 18px;
-    background: #292929;
-    padding: 10px;
-    border-radius: 6px;
+.cancel-btn {
+    background: #FF3B30;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.cancel-btn:hover {
+    opacity: 0.8;
+}
+
+.rezultat{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 25px;
+    padding-top: 10px;
+    
 }
